@@ -33,6 +33,17 @@ window.addEventListener('DOMContentLoaded', () => {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent.toLowerCase());
 
   if (isIOS && isSafari) {
-    iosPrompt.classList.remove('hidden');
+    setTimeout(() => {
+      iosPrompt.classList.remove('hidden');
+    }, 1000); // breve retraso para no mostrarla de inmediato
   }
 });
+
+// Registrar el Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
+      .catch(err => console.error('❌ Error al registrar Service Worker:', err));
+  });
+}

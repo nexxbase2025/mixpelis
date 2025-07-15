@@ -9,6 +9,49 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="assets/icon.png" />
   <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .install-prompt,
+    .ios-prompt {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background-color: #111;
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .install-prompt button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: gold;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -32,13 +75,13 @@
 
   <!-- Para Android -->
   <div id="installPrompt" class="install-prompt hidden">
-    <p>Instalar MIXPELIS</p>
+    <p>¿Quieres instalar MIXPELIS?</p>
     <button id="installBtn">INSTALAR</button>
   </div>
 
   <!-- Para iPhone -->
   <div id="iosPrompt" class="ios-prompt hidden">
-    <p>Para instalar en iPhone, toca <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
+    <p>Para instalar esta app en tu iPhone, toca <strong>Compartir</strong> y luego <strong>"Añadir a pantalla de inicio"</strong>.</p>
   </div>
 
   <!-- Script principal -->
@@ -48,7 +91,7 @@
       const iosPrompt = document.getElementById('iosPrompt');
       let deferredPrompt = null;
 
-      // Android - Detectar evento de instalación
+      // Android - Evento de instalación
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -56,12 +99,10 @@
 
         document.getElementById('installBtn').addEventListener('click', () => {
           installPrompt.classList.add('hidden');
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => {
-              deferredPrompt = null;
-            });
-          }
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(() => {
+            deferredPrompt = null;
+          });
         });
       });
 
@@ -70,7 +111,9 @@
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
       if (isIOS && isSafari) {
-        iosPrompt.classList.remove('hidden');
+        setTimeout(() => {
+          iosPrompt.classList.remove('hidden');
+        }, 1000); // pequeño retraso para evitar mostrarlo de inmediato
       }
     });
 
