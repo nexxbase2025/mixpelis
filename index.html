@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIXPELIS</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="apple-touch-icon" href="assets/icon.png" />
+</head>
+<body>
+  <header>
+    <h1>MIXPELIS</h1>
+  </header>
+  <main>
+    <section class="bubbles">
+      <button class="bubble" data-category="accion">ACCIÓN</button>
+      <button class="bubble" data-category="terror">TERROR</button>
+      <button class="bubble" data-category="drama">DRAMA</button>
+      <button class="bubble" data-category="comedia">COMEDIA</button>
+      <button class="bubble" data-category="infantiles">INFANTILES</button>
+    </section>
+    <section id="movie-list" class="movie-list"></section>
+  </main>
+  <footer>
+    <p>&copy; 2025 MIXPELIS</p>
+  </footer>
+  <div id="installPrompt" class="install-prompt hidden">
+    <p>Instalar MIXPELIS</p>
+    <button id="installBtn">INSTALAR</button>
+  </div>
+  <div id="iosPrompt" class="ios-prompt hidden">
+    <p>Para instalar en iPhone, toque <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
+  </div>
+  <script defer src="js/app.js"></script>
+</body>
+</html>

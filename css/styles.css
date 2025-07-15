@@ -1,0 +1,125 @@
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #000;
+  color: #fff;
+}
+header, footer {
+  text-align: center;
+  background-color: #111;
+  padding: 1em;
+}
+.bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1em;
+  padding: 1em;
+}
+.bubble {
+  background: gold;
+  color: black;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  font-weight: bold;
+  border: none;
+}
+#movie-list {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.movie {
+  background-color: #222;
+  padding: 1em;
+  border: 1px solid gold;
+}
+.install-prompt, .ios-prompt {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #111;
+  color: gold;
+  padding: 1em;
+  border: 2px solid gold;
+  border-radius: 10px;
+}
+.hidden { display: none; }
+
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000ee;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  background: black;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+}
+
+.close-button {
+  position: absolute;
+  top: -45px;
+  right: 0;
+  background: gold;
+  color: black;
+  border: none;
+  font-size: 1.2em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  border-radius: 0.5em;
+}
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000ee;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  background: black;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+}
+
+.close-button {
+  position: absolute;
+  top: -45px;
+  right: 0;
+  background: gold;
+  color: black;
+  border: none;
+  font-size: 1.2em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  border-radius: 0.5em;
+}
