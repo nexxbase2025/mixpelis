@@ -10,31 +10,24 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />
   <link rel="apple-touch-icon" href="assets/icon.png" />
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="css/styles.css" />
-  <style>
-    .hidden { display: none; }
 
-    #installPrompt, #iosPrompt {
+  <!-- Estilos para los avisos -->
+  <style>
+    #installPrompt,
+    #iosPrompt {
       position: fixed;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
       background: gold;
       color: black;
-      padding: 10px 15px;
+      padding: 12px 16px;
       border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
       z-index: 9999;
       font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    #iosPrompt {
-      background: white;
-      color: black;
+      line-height: 1.4em;
     }
 
     #installPrompt button {
@@ -43,8 +36,18 @@
       border: none;
       padding: 6px 12px;
       border-radius: 6px;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    #iosPrompt {
+      background: white;
+      color: black;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -69,43 +72,52 @@
     <p>&copy; 2025 MIXPELIS</p>
   </footer>
 
-  <!-- Android: Instalar app -->
+  <!-- Burbuja para Android y PC -->
   <div id="installPrompt" class="hidden">
     <span>¿Quieres instalar MIXPELIS?</span>
-    <button id="installBtn">INSTALAR</button>
+    <button id="installBtn">Descargar App</button>
   </div>
 
-  <!-- iPhone/iPad: Instrucciones -->
+  <!-- Aviso para iPhone/Mac Safari -->
   <div id="iosPrompt" class="hidden">
-    <p>Para instalar en iPhone, toca <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
+    <p><strong>¿Quieres instalar esta app?</strong><br>
+    En Safari, presiona <strong>Compartir</strong> 
+    (<img src="https://img.icons8.com/ios-filled/20/000000/share.png" style="vertical-align:middle;" />)
+    y elige <strong>“Agregar a pantalla de inicio”</strong>.</p>
   </div>
 
-  <!-- App -->
+  <!-- Tu JS principal -->
   <script defer src="js/app.js"></script>
 
-  <!-- Service Worker + Instalación -->
+  <!-- Script para detección e instalación -->
   <script>
-    // Registrar el Service Worker
+    // Registrar Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js');
     }
 
-    // Android: Instalación PWA
+    // Mostrar aviso de instalación en Android y PC
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('installPrompt').classList.remove('hidden');
+      document.getElementById('installPrompt')?.classList.remove('hidden');
     });
 
     document.getElementById('installBtn')?.addEventListener('click', () => {
       document.getElementById('installPrompt').classList.add('hidden');
-      deferredPrompt?.prompt();
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+      }
     });
 
-    // iOS: Mostrar instrucciones
-    if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
-      document.getElementById('iosPrompt').classList.remove('hidden');
+    // Mostrar aviso para iOS/Mac Safari
+    const isIOS = /iphone|ipad|ipod|macintosh/i.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    if (isIOS && isSafari && !isStandalone) {
+      document.getElementById('iosPrompt')?.classList.remove('hidden');
     }
   </script>
 </body>
