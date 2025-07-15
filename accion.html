@@ -1,79 +1,100 @@
 
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Películas de Acción | MIXPELIS</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <title>Acción - MIXPELIS</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: gold;
+      margin-bottom: 30px;
+    }
+
+    .movie {
+      background-color: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .movie h3 {
+      margin-bottom: 15px;
+    }
+
+    .movie a button {
+      padding: 10px 20px;
+      background-color: gold;
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .movie a button:hover {
+      background-color: #ffd700;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      background-color: gold;
+      color: black;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>PELÍCULAS DE ACCIÓN</h1>
-  </header>
+  <a href="index.html" class="back-button">⬅ Volver al inicio</a>
+  <h1>Películas de Acción</h1>
 
-  <main>
-    <section class="movie-list">
-      <div class="movie">
-        <h3>ESCAPAR DE LA PYTON</h3>
-        <button class="play-button" data-url="https://ia800804.us.archive.org/15/items/peliculas-chinas-de-accion/C%C3%B3mo%20escapar%20del%20ataque%20de%20una%20pit%C3%B3n%20gigante.mp4">▶ Ver película</button>
-      </div>
-      <div class="movie">
-        <h3>NARCO TERROR</h3>
-        <button class="play-button" data-url="https://dn720403.ca.archive.org/0/items/narco-terror-1985-hd-1080p/Narco%20Terror%20%281985%29HD%201080p.mp4">▶ Ver película</button>
-      </div>
-      <div class="movie">
-        <h3>Película Acción 3</h3>
-        <button class="play-button" data-url="https://archive.org/download/accion-item-3/accion3.mp4">▶ Ver película</button>
-      </div>
-      <div class="movie">
-        <h3>Película Acción 4</h3>
-        <button class="play-button" data-url="https://archive.org/download/accion-item-4/accion4.mp4">▶ Ver película</button>
-      </div>
-      <div class="movie">
-        <h3>Película Acción 5</h3>
-        <button class="play-button" data-url="https://archive.org/download/accion-item-5/accion5.mp4">▶ Ver película</button>
-      </div>
-    </section>
-
-    <div style="text-align: center; margin: 2em;">
-      <a href="index.html">
-        <button class="play-button">⬅ Regresar al inicio</button>
-      </a>
-    </div>
-  </main>
-
-  <div id="videoOverlay" class="video-container hidden">
-    <div class="video-wrapper">
-      <button class="close-button">✖ Cerrar</button>
-      <video controls autoplay>
-        <source id="videoSource" src="" type="video/mp4">
-        Tu navegador no soporta la reproducción de video.
-      </video>
-    </div>
+  <div class="movie">
+    <h3>ESCAPAR DE LA PYTON</h3>
+    <a href="ver.html?url=https://ia800804.us.archive.org/15/items/peliculas-chinas-de-accion/C%C3%B3mo%20escapar%20del%20ataque%20de%20una%20pit%C3%B3n%20gigante.mp4&title=ESCAPAR%20DE%20LA%20PYTON&cat=accion">
+      <button>▶ Ver película</button>
+    </a>
   </div>
 
-  <script>
-    const buttons = document.querySelectorAll('.play-button');
-    const overlay = document.getElementById('videoOverlay');
-    const video = overlay.querySelector('video');
-    const source = document.getElementById('videoSource');
-    const closeBtn = document.querySelector('.close-button');
+  <div class="movie">
+    <h3>NARCO TERROR</h3>
+    <a href="ver.html?url=https://dn720403.ca.archive.org/0/items/narco-terror-1985-hd-1080p/Narco%20Terror%20%281985%29HD%201080p.mp4&title=NARCO%20TERROR&cat=accion">
+      <button>▶ Ver película</button>
+    </a>
+  </div>
 
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        const url = button.getAttribute('data-url');
-        source.src = url;
-        video.load();
-        overlay.classList.remove('hidden');
-      });
-    });
+  <div class="movie">
+    <h3>PELÍCULA ACCIÓN 3</h3>
+    <a href="ver.html?url=https://archive.org/download/accion-item-3/accion3.mp4&title=PELÍCULA%20ACCIÓN%203&cat=accion">
+      <button>▶ Ver película</button>
+    </a>
+  </div>
 
-    closeBtn.addEventListener('click', () => {
-      video.pause();
-      overlay.classList.add('hidden');
-      source.src = "";
-    });
-  </script>
+  <div class="movie">
+    <h3>PELÍCULA ACCIÓN 4</h3>
+    <a href="ver.html?url=https://archive.org/download/accion-item-4/accion4.mp4&title=PELÍCULA%20ACCIÓN%204&cat=accion">
+      <button>▶ Ver película</button>
+    </a>
+  </div>
+
+  <div class="movie">
+    <h3>PELÍCULA ACCIÓN 5</h3>
+    <a href="ver.html?url=https://archive.org/download/accion-item-5/accion5.mp4&title=PELÍCULA%20ACCIÓN%205&cat=accion">
+      <button>▶ Ver película</button>
+    </a>
+  </div>
 </body>
-</html>
+</html><
