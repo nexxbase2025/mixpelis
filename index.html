@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
   <title>MIXPELIS</title>
   <meta name="theme-color" content="#000000" />
   <link rel="manifest" href="manifest.json" />
@@ -73,25 +73,25 @@
     <p>&copy; 2025 MIXPELIS</p>
   </footer>
 
-  <!-- Para Android -->
+  <!-- Android -->
   <div id="installPrompt" class="install-prompt hidden">
     <p>¿Quieres instalar MIXPELIS?</p>
     <button id="installBtn">INSTALAR</button>
   </div>
 
-  <!-- Para iPhone -->
+  <!-- iPhone -->
   <div id="iosPrompt" class="ios-prompt hidden">
     <p>Para instalar esta app en tu iPhone, toca <strong>Compartir</strong> y luego <strong>"Añadir a pantalla de inicio"</strong>.</p>
   </div>
 
-  <!-- Script principal -->
+  <!-- Script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const installPrompt = document.getElementById('installPrompt');
       const iosPrompt = document.getElementById('iosPrompt');
       let deferredPrompt = null;
 
-      // Android - Evento de instalación
+      // Android
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -106,34 +106,26 @@
         });
       });
 
-      // iOS con Safari (una sola vez por sesión)
-      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      // iPhone
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent.toLowerCase());
 
-      if (isIOS && isSafari && !sessionStorage.getItem('iosPromptShown')) {
-        setTimeout(() => {
-          iosPrompt.classList.remove('hidden');
-        }, 1000);
+      if (isIOS && isSafari && !window.navigator.standalone) {
+        iosPrompt.classList.remove('hidden');
 
-        sessionStorage.setItem('iosPromptShown', 'true');
-
-        // Ocultar automáticamente después de 10 segundos o al tocar
+        // Ocultar después de 8 segundos si no se toca
         setTimeout(() => {
           iosPrompt.classList.add('hidden');
-        }, 10000);
-
-        document.addEventListener('touchstart', () => {
-          iosPrompt.classList.add('hidden');
-        });
+        }, 8000);
       }
     });
 
-    // Registro del Service Worker
+    // Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
-          .catch(err => console.error('❌ Error al registrar Service Worker:', err));
+          .then(reg => console.log('✅ SW registrado:', reg.scope))
+          .catch(err => console.error('❌ SW error:', err));
       });
     }
   </script>
