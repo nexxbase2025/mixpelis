@@ -106,14 +106,25 @@
         });
       });
 
-      // iOS con Safari
+      // iOS con Safari (una sola vez por sesión)
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-      if (isIOS && isSafari) {
+      if (isIOS && isSafari && !sessionStorage.getItem('iosPromptShown')) {
         setTimeout(() => {
           iosPrompt.classList.remove('hidden');
-        }, 1000); // pequeño retraso para evitar mostrarlo de inmediato
+        }, 1000);
+
+        sessionStorage.setItem('iosPromptShown', 'true');
+
+        // Ocultar automáticamente después de 10 segundos o al tocar
+        setTimeout(() => {
+          iosPrompt.classList.add('hidden');
+        }, 10000);
+
+        document.addEventListener('touchstart', () => {
+          iosPrompt.classList.add('hidden');
+        });
       }
     });
 

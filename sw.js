@@ -1,8 +1,15 @@
 
 const CACHE_NAME = "mixpelis-cache-v1";
+
 const urlsToCache = [
   "/",
   "/index.html",
+  "/accion.html",
+  "/comedia.html",
+  "/drama.html",
+  "/terror.html",
+  "/infantiles.html",
+  "/ver.html",
   "/css/styles.css",
   "/manifest.json",
   "/assets/icon.png",
@@ -19,7 +26,7 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// Activar y eliminar cachés antiguos
+// Activar y limpiar cachés antiguas
 self.addEventListener("activate", (event) => {
   console.log("🔁 Service Worker activado");
   event.waitUntil(
@@ -36,7 +43,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Interceptar solicitudes y responder con caché si está disponible
+// Interceptar solicitudes
 self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
