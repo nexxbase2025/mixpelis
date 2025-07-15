@@ -3,6 +3,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#000000" />
+<link rel="stylesheet" href="css/styles.css" />
+<link rel="apple-touch-icon" href="assets/icon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MIXPELIS</title>
   <meta name="theme-color" content="#000000" />
@@ -143,5 +147,17 @@
       }
     });
   </script>
+  <!-- Para Android -->
+<div id="installPrompt" class="install-prompt hidden">
+  <p>Instalar MIXPELIS</p>
+  <button id="installBtn">INSTALAR</button>
+</div>
+
+<!-- Para iPhone -->
+<div id="iosPrompt" class="ios-prompt hidden">
+  <p>Para instalar en iPhone, toque <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
+</div>
+
+<script defer src="app.js"></script>
 </body>
 </html>

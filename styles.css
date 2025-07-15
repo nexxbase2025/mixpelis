@@ -1,0 +1,142 @@
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #000;
+  color: #fff;
+}
+
+header, footer {
+  text-align: center;
+  background-color: #111;
+  padding: 1em;
+}
+
+.bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1em;
+  padding: 1em;
+}
+
+/* Burbuja categoría responsiva */
+.bubble {
+  background: gold;
+  color: black;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: none;
+  transition: transform 0.3s ease;
+}
+.bubble:hover, .bubble:focus {
+  transform: scale(1.1);
+  outline: none;
+}
+
+/* Responsive: 3 en escritorio, 2 en tablet, 1 en móvil */
+@media (max-width: 900px) {
+  .bubble {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 700px) {
+  .bubble {
+    width: 45vw;
+    height: 45vw;
+    font-size: 1.2em;
+  }
+}
+
+@media (max-width: 400px) {
+  .bubble {
+    width: 70vw;
+    height: 70vw;
+    font-size: 1.4em;
+  }
+}
+
+#movie-list {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.movie {
+  background-color: #222;
+  padding: 1em;
+  border: 1px solid gold;
+}
+
+.install-prompt,
+.ios-prompt {
+  position: fixed;
+  bottom: 20px;
+  left: 20px; /* Cambio a izquierda para que no tape scroll u otros botones */
+  right: auto; /* para no estirarse hacia la derecha */
+  background: #111;
+  color: gold;
+  padding: 1em;
+  border: 2px solid gold;
+  border-radius: 10px;
+  z-index: 10000;
+  max-width: 320px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-size: 1em;
+  user-select: none;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000ee;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  background: black;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+}
+
+.close-button {
+  position: absolute;
+  top: -45px;
+  right: 0;
+  background: gold;
+  color: black;
+  border: none;
+  font-size: 1.2em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  border-radius: 0.5em;
+}

@@ -1,9 +1,8 @@
 
-// sw.js - Service Worker para MIXPELIS
-
+// Service Worker básico
 self.addEventListener('install', function (event) {
   console.log('✅ Service Worker instalado');
-  self.skipWaiting(); // activa sin esperar
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', function (event) {
@@ -11,5 +10,5 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
-  // Puedes añadir caché aquí si lo deseas en el futuro
+  // Aquí se puede implementar caché si deseas
 });
