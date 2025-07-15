@@ -7,8 +7,7 @@
   <title>Ver Película - MIXPELIS</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       background-color: black;
       color: white;
       height: 100%;
@@ -18,10 +17,10 @@
 
     #back-button {
       position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 1000;
-      background-color: rgba(0, 0, 0, 0.6);
+      top: 10px;
+      left: 10px;
+      z-index: 1100;
+      background-color: rgba(0, 0, 0, 0.7);
       color: gold;
       border: none;
       padding: 10px 16px;
@@ -31,22 +30,24 @@
       cursor: pointer;
       display: none;
       transition: opacity 0.3s ease;
+      user-select: none;
     }
 
     #player {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       object-fit: contain;
       background: black;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <!-- Botón de volver (inicialmente oculto) -->
-  <button id="back-button">⬅ Volver</button>
+  <!-- Botón de volver -->
+  <button id="back-button" aria-label="Volver">⬅ Volver</button>
 
-  <!-- Reproductor -->
+  <!-- Video player -->
   <video id="player" controls playsinline webkit-playsinline></video>
 
   <script>
@@ -56,12 +57,12 @@
     const player = document.getElementById("player");
     const backButton = document.getElementById("back-button");
 
-    // Asignar la película
+    // Asignar fuente video
     if (url) {
       player.src = url;
     }
 
-    // Botón volver
+    // Botón volver: vuelve a la categoría o al índice
     backButton.addEventListener("click", () => {
       if (categoria) {
         window.location.href = `${categoria}.html`;
@@ -70,36 +71,40 @@
       }
     });
 
-    // Mostrar botón al tocar pantalla
+    // Mostrar el botón y ocultar después de 3s
     let hideTimeout;
     function showBackButton() {
       backButton.style.display = "block";
       backButton.style.opacity = "1";
-      clearTimeout(hideTimeout);
+      if (hideTimeout) clearTimeout(hideTimeout);
       hideTimeout = setTimeout(() => {
         backButton.style.opacity = "0";
         setTimeout(() => backButton.style.display = "none", 300);
       }, 3000);
     }
 
-    // Detectar interacción
+    // Mostrar el botón al tocar o mover mouse/touch
     document.addEventListener("touchstart", showBackButton);
-    document.addEventListener("click", showBackButton); // también para desktop
-    document.addEventListener("mousemove", showBackButton); // opcional en pruebas
+    document.addEventListener("click", showBackButton);
+    document.addEventListener("mousemove", showBackButton);
 
-    // Ajustar tamaño al girar
+    // Ajustar tamaño video para ocupar toda la pantalla
     function resizeVideo() {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      player.style.width = vw + "px";
-      player.style.height = vh + "px";
+      player.style.width = window.innerWidth + "px";
+      player.style.height = window.innerHeight + "px";
     }
 
+    // Ejecutar resize en carga y cambio orientación/ventana
     window.addEventListener("resize", resizeVideo);
-    window.addEventListener("orientationchange", resizeVideo);
+    window.addEventListener("orientationchange", () => {
+      resizeVideo();
+      showBackButton();  // También mostrar botón al girar pantalla
+    });
     window.addEventListener("load", () => {
       resizeVideo();
+      showBackButton();  // Mostrar botón inicialmente para que se note
     });
   </script>
+
 </body>
 </html>
