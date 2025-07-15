@@ -8,96 +8,80 @@
   <meta name="theme-color" content="#000000" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="assets/icon.png" />
+  <link rel="stylesheet" href="css/styles.css" />
   <style>
     body {
-      margin: 0;
-      padding: 0;
       background-color: black;
       color: white;
       font-family: sans-serif;
-      text-align: center;
+      margin: 0;
+      padding: 0;
     }
 
-    header {
-      background-color: black;
+    header, footer {
+      text-align: center;
       padding: 20px;
     }
 
     h1 {
       color: gold;
-      font-size: 2.5em;
+      margin-top: 20px;
     }
 
     .bubbles {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+      padding: 20px;
     }
 
     .bubble {
       background-color: gold;
       color: black;
-      padding: 20px 30px;
-      border-radius: 50%;
       font-weight: bold;
-      font-size: 1.2em;
+      padding: 10px;
       border: none;
-      cursor: pointer;
-      transition: transform 0.2s;
-      width: 120px;
-      height: 120px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      border-radius: 50px;
       text-align: center;
+      cursor: pointer;
+      font-size: 0.9em;
+      white-space: nowrap;
     }
 
     .bubble:hover {
-      transform: scale(1.1);
+      background-color: #ffd700;
     }
 
-    footer {
+    .movie-list {
       padding: 20px;
-      color: gray;
-      font-size: 0.9em;
     }
 
     .install-prompt,
     .ios-prompt {
+      background: #222;
+      color: white;
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
-      background-color: #111;
-      color: gold;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
       padding: 15px;
-      border: 2px solid gold;
       border-radius: 10px;
-      text-align: center;
       z-index: 1000;
+      text-align: center;
     }
 
-    .install-prompt.hidden,
-    .ios-prompt.hidden {
-      display: none;
-    }
-
-    #installBtn {
-      margin-top: 10px;
+    .install-prompt button {
       background-color: gold;
       color: black;
       border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 8px 20px;
+      border-radius: 5px;
       font-weight: bold;
-      cursor: pointer;
+      margin-top: 10px;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -108,53 +92,56 @@
 
   <main>
     <section class="bubbles">
-      <a href="accion.html"><div class="bubble">ACCIÓN</div></a>
-      <a href="terror.html"><div class="bubble">TERROR</div></a>
-      <a href="drama.html"><div class="bubble">DRAMA</div></a>
-      <a href="comedia.html"><div class="bubble">COMEDIA</div></a>
-      <a href="infantiles.html"><div class="bubble">INFANTILES</div></a>
+      <button class="bubble" onclick="location.href='accion.html'">ACCIÓN</button>
+      <button class="bubble" onclick="location.href='terror.html'">TERROR</button>
+      <button class="bubble" onclick="location.href='drama.html'">DRAMA</button>
+      <button class="bubble" onclick="location.href='comedia.html'">COMEDIA</button>
+      <button class="bubble" onclick="location.href='infantiles.html'">INFANTILES</button>
     </section>
+
+    <section id="movie-list" class="movie-list"></section>
   </main>
 
   <footer>
     <p>&copy; 2025 MIXPELIS</p>
   </footer>
 
-  <!-- Android Install Prompt -->
+  <!-- Instalar en Android -->
   <div id="installPrompt" class="install-prompt hidden">
-    <p>Instala MIXPELIS en tu dispositivo</p>
-    <button id="installBtn">📲 INSTALAR</button>
+    <p>Instalar MIXPELIS en tu dispositivo</p>
+    <button id="installBtn">INSTALAR</button>
   </div>
 
-  <!-- iOS Prompt -->
+  <!-- Instrucciones para iPhone -->
   <div id="iosPrompt" class="ios-prompt hidden">
-    <p>Para instalar en iPhone o iPad:<br>Toque <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
+    <p>Para instalar en iPhone, toca <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
   </div>
 
+  <script defer src="js/app.js"></script>
   <script>
-    let deferredPrompt;
-    const installPrompt = document.getElementById('installPrompt');
-    const installBtn = document.getElementById('installBtn');
-    const iosPrompt = document.getElementById('iosPrompt');
+    window.addEventListener('DOMContentLoaded', () => {
+      const installPrompt = document.getElementById('installPrompt');
+      const iosPrompt = document.getElementById('iosPrompt');
+      let deferredPrompt;
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installPrompt.classList.remove('hidden');
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installPrompt.classList.remove('hidden');
+
+        document.getElementById('installBtn').addEventListener('click', () => {
+          installPrompt.classList.add('hidden');
+          deferredPrompt.prompt();
+        });
+      });
+
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+      if (isIOS && isSafari) {
+        iosPrompt.classList.remove('hidden');
+      }
     });
-
-    installBtn.addEventListener('click', () => {
-      installPrompt.classList.add('hidden');
-      deferredPrompt.prompt();
-    });
-
-    // iOS detection
-    const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
-
-    if (isIOS && !isInStandaloneMode) {
-      iosPrompt.classList.remove('hidden');
-    }
   </script>
 </body>
 </html>
