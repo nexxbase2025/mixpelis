@@ -1,54 +1,76 @@
 
+/* Estilo base */
 body {
   margin: 0;
   font-family: sans-serif;
   background-color: #000;
   color: #fff;
 }
+
+/* Encabezado y pie */
 header, footer {
   text-align: center;
   background-color: #111;
   padding: 1em;
 }
+
+h1 {
+  color: gold;
+  margin: 0.5em 0;
+}
+
+/* Burbujas de categorías */
 .bubbles {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 1em;
   padding: 1em;
 }
+
 .bubble {
-  background: gold;
+  background-color: gold;
   color: black;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  border-radius: 50px;
+  padding: 1em;
   font-weight: bold;
   border: none;
+  cursor: pointer;
+  font-size: 1em;
+  text-align: center;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
 }
-#movie-list {
+
+.bubble:hover {
+  transform: scale(1.05);
+  background-color: #ffd700;
+}
+
+/* Lista de películas */
+.movie-list {
   padding: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
 }
+
 .movie {
   background-color: #222;
   padding: 1em;
   border: 1px solid gold;
-}
-.install-prompt, .ios-prompt {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #111;
-  color: gold;
-  padding: 1em;
-  border: 2px solid gold;
+  margin-bottom: 1em;
   border-radius: 10px;
 }
-.hidden { display: none; }
 
+/* Botón para reproducir */
+.play-button {
+  background-color: gold;
+  color: black;
+  border: none;
+  padding: 0.5em 1em;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Contenedor de video */
 .video-container {
   position: fixed;
   top: 0;
@@ -86,40 +108,47 @@ header, footer {
   cursor: pointer;
   border-radius: 0.5em;
 }
-.video-container {
+
+/* Prompts de instalación */
+.install-prompt,
+.ios-prompt {
+  background: #222;
+  color: white;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #000000ee;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  z-index: 1000;
+  text-align: center;
 }
 
-.video-wrapper {
-  position: relative;
-  width: 90%;
-  max-width: 900px;
-  background: black;
-}
-
-.video-wrapper video {
-  width: 100%;
-  height: auto;
-}
-
-.close-button {
-  position: absolute;
-  top: -45px;
-  right: 0;
-  background: gold;
+.install-prompt button {
+  background-color: gold;
   color: black;
   border: none;
-  font-size: 1.2em;
-  padding: 0.5em 1em;
+  padding: 8px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-top: 10px;
   cursor: pointer;
-  border-radius: 0.5em;
+}
+
+/* Elemento oculto */
+.hidden {
+  display: none;
+}
+
+/* Responsivo para dispositivos pequeños */
+@media (max-width: 480px) {
+  .bubble {
+    font-size: 0.8em;
+    padding: 0.8em;
+  }
+
+  .close-button {
+    top: -35px;
+    font-size: 1em;
+  }
 }
