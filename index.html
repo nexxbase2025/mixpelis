@@ -5,53 +5,102 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MIXPELIS</title>
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="assets/icon.png" />
-  <link rel="stylesheet" href="css/styles.css" />
-
-  <!-- Estilos para los avisos -->
   <style>
-    #installPrompt,
-    #iosPrompt {
-      position: fixed;
-      bottom: 15px;
-      left: 15px;
-      right: 15px;
-      background: gold;
-      color: black;
-      padding: 12px 16px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      z-index: 9999;
-      font-size: 14px;
-      line-height: 1.4em;
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
     }
 
-    #installPrompt button {
-      background: black;
+    header {
+      background-color: black;
+      padding: 20px;
+    }
+
+    h1 {
       color: gold;
+      font-size: 2.5em;
+    }
+
+    .bubbles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .bubble {
+      background-color: gold;
+      color: black;
+      padding: 20px 30px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 1.2em;
       border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .bubble:hover {
+      transform: scale(1.1);
+    }
+
+    footer {
+      padding: 20px;
+      color: gray;
+      font-size: 0.9em;
+    }
+
+    .install-prompt,
+    .ios-prompt {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background-color: #111;
+      color: gold;
+      padding: 15px;
+      border: 2px solid gold;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .install-prompt.hidden,
+    .ios-prompt.hidden {
+      display: none;
+    }
+
+    #installBtn {
+      margin-top: 10px;
+      background-color: gold;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      margin-left: 10px;
     }
 
-    #iosPrompt {
-      background: white;
-      color: black;
-    }
-
-    .hidden {
-      display: none;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
   </style>
 </head>
-
 <body>
   <header>
     <h1>MIXPELIS</h1>
@@ -59,65 +108,52 @@
 
   <main>
     <section class="bubbles">
-      <button class="bubble" data-category="accion">ACCIÓN</button>
-      <button class="bubble" data-category="terror">TERROR</button>
-      <button class="bubble" data-category="drama">DRAMA</button>
-      <button class="bubble" data-category="comedia">COMEDIA</button>
-      <button class="bubble" data-category="infantiles">INFANTILES</button>
+      <a href="accion.html"><div class="bubble">ACCIÓN</div></a>
+      <a href="terror.html"><div class="bubble">TERROR</div></a>
+      <a href="drama.html"><div class="bubble">DRAMA</div></a>
+      <a href="comedia.html"><div class="bubble">COMEDIA</div></a>
+      <a href="infantiles.html"><div class="bubble">INFANTILES</div></a>
     </section>
-    <section id="movie-list" class="movie-list"></section>
   </main>
 
   <footer>
     <p>&copy; 2025 MIXPELIS</p>
   </footer>
 
-  <!-- Burbuja para Android y PC -->
-  <div id="installPrompt" class="hidden">
-    <span>¿Quieres instalar MIXPELIS?</span>
-    <button id="installBtn">Descargar App</button>
+  <!-- Android Install Prompt -->
+  <div id="installPrompt" class="install-prompt hidden">
+    <p>Instala MIXPELIS en tu dispositivo</p>
+    <button id="installBtn">📲 INSTALAR</button>
   </div>
 
-  <!-- Aviso para iPhone/Mac Safari -->
-  <div id="iosPrompt" class="hidden">
-    <p><strong>¿Quieres instalar esta app?</strong><br>
-    En Safari, presiona <strong>Compartir</strong> 
-    (<img src="https://img.icons8.com/ios-filled/20/000000/share.png" style="vertical-align:middle;" />)
-    y elige <strong>“Agregar a pantalla de inicio”</strong>.</p>
+  <!-- iOS Prompt -->
+  <div id="iosPrompt" class="ios-prompt hidden">
+    <p>Para instalar en iPhone o iPad:<br>Toque <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
   </div>
 
-  <!-- Tu JS principal -->
-  <script defer src="js/app.js"></script>
-
-  <!-- Script para detección e instalación -->
   <script>
-    // Registrar Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-
-    // Mostrar aviso de instalación en Android y PC
     let deferredPrompt;
+    const installPrompt = document.getElementById('installPrompt');
+    const installBtn = document.getElementById('installBtn');
+    const iosPrompt = document.getElementById('iosPrompt');
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('installPrompt')?.classList.remove('hidden');
+      installPrompt.classList.remove('hidden');
     });
 
-    document.getElementById('installBtn')?.addEventListener('click', () => {
-      document.getElementById('installPrompt').classList.add('hidden');
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-      }
+    installBtn.addEventListener('click', () => {
+      installPrompt.classList.add('hidden');
+      deferredPrompt.prompt();
     });
 
-    // Mostrar aviso para iOS/Mac Safari
-    const isIOS = /iphone|ipad|ipod|macintosh/i.test(navigator.userAgent);
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    // iOS detection
+    const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
 
-    if (isIOS && isSafari && !isStandalone) {
-      document.getElementById('iosPrompt')?.classList.remove('hidden');
+    if (isIOS && !isInStandaloneMode) {
+      iosPrompt.classList.remove('hidden');
     }
   </script>
 </body>
