@@ -5,15 +5,55 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MIXPELIS</title>
+
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="css/styles.css" />
   <meta name="theme-color" content="#000000" />
   <link rel="apple-touch-icon" href="assets/icon.png" />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .hidden { display: none; }
+
+    #installPrompt, #iosPrompt {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      background: gold;
+      color: black;
+      padding: 10px 15px;
+      border-radius: 10px;
+      z-index: 9999;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #iosPrompt {
+      background: white;
+      color: black;
+    }
+
+    #installPrompt button {
+      background: black;
+      color: gold;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
 </head>
+
 <body>
   <header>
     <h1>MIXPELIS</h1>
   </header>
+
   <main>
     <section class="bubbles">
       <button class="bubble" data-category="accion">ACCIÓN</button>
@@ -24,16 +64,49 @@
     </section>
     <section id="movie-list" class="movie-list"></section>
   </main>
+
   <footer>
     <p>&copy; 2025 MIXPELIS</p>
   </footer>
-  <div id="installPrompt" class="install-prompt hidden">
-    <p>Instalar MIXPELIS</p>
+
+  <!-- Android: Instalar app -->
+  <div id="installPrompt" class="hidden">
+    <span>¿Quieres instalar MIXPELIS?</span>
     <button id="installBtn">INSTALAR</button>
   </div>
-  <div id="iosPrompt" class="ios-prompt hidden">
-    <p>Para instalar en iPhone, toque <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
+
+  <!-- iPhone/iPad: Instrucciones -->
+  <div id="iosPrompt" class="hidden">
+    <p>Para instalar en iPhone, toca <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
   </div>
+
+  <!-- App -->
   <script defer src="js/app.js"></script>
+
+  <!-- Service Worker + Instalación -->
+  <script>
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    // Android: Instalación PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installPrompt').classList.remove('hidden');
+    });
+
+    document.getElementById('installBtn')?.addEventListener('click', () => {
+      document.getElementById('installPrompt').classList.add('hidden');
+      deferredPrompt?.prompt();
+    });
+
+    // iOS: Mostrar instrucciones
+    if (/iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase())) {
+      document.getElementById('iosPrompt').classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>
