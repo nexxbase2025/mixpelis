@@ -41,13 +41,14 @@
     <p>Para instalar en iPhone, toca <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.</p>
   </div>
 
+  <!-- Script principal -->
   <script>
-    // Detecta instalación en Android/iOS
-    window.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       const installPrompt = document.getElementById('installPrompt');
       const iosPrompt = document.getElementById('iosPrompt');
-      let deferredPrompt;
+      let deferredPrompt = null;
 
+      // Android - Detectar evento de instalación
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -55,25 +56,30 @@
 
         document.getElementById('installBtn').addEventListener('click', () => {
           installPrompt.classList.add('hidden');
-          deferredPrompt.prompt();
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(() => {
+              deferredPrompt = null;
+            });
+          }
         });
       });
 
+      // iOS con Safari
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
       if (isIOS && isSafari) {
         iosPrompt.classList.remove('hidden');
       }
     });
-  </script>
 
-  <!-- Registro del Service Worker -->
-  <script>
+    // Registro del Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
           .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
-          .catch(err => console.error('❌ Error al registrar SW:', err));
+          .catch(err => console.error('❌ Error al registrar Service Worker:', err));
       });
     }
   </script>

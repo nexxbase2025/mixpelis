@@ -2,10 +2,12 @@
 {
   "name": "MIXPELIS",
   "short_name": "MIXPELIS",
-  "start_url": "./",
+  "start_url": "/index.html",
   "display": "standalone",
+  "scope": "/",
   "background_color": "#000000",
   "theme_color": "#000000",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "assets/icon.png",

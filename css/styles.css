@@ -70,7 +70,7 @@ h1 {
   cursor: pointer;
 }
 
-/* Contenedor de video */
+/* Contenedor de video en pantalla completa */
 .video-container {
   position: fixed;
   top: 0;
@@ -89,11 +89,13 @@ h1 {
   width: 90%;
   max-width: 900px;
   background: black;
+  border-radius: 10px;
 }
 
 .video-wrapper video {
   width: 100%;
   height: auto;
+  border-radius: 10px;
 }
 
 .close-button {
@@ -140,7 +142,7 @@ h1 {
   display: none;
 }
 
-/* Responsivo para dispositivos pequeños */
+/* Responsivo para pantallas pequeñas */
 @media (max-width: 480px) {
   .bubble {
     font-size: 0.8em;
@@ -150,5 +152,14 @@ h1 {
   .close-button {
     top: -35px;
     font-size: 1em;
+  }
+
+  h1 {
+    font-size: 1.2em;
+  }
+
+  .install-prompt,
+  .ios-prompt {
+    font-size: 0.9em;
   }
 }
