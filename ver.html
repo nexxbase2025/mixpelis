@@ -3,11 +3,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Ver Película - MIXPELIS</title>
   <style>
     html, body {
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       background-color: black;
       color: white;
       height: 100%;
@@ -62,6 +64,7 @@
       font-size: 15px;
       z-index: 999;
       display: none;
+      transition: opacity 0.5s ease;
     }
   </style>
 </head>
@@ -86,12 +89,12 @@
     const movieTitle = document.getElementById("movie-title");
     const iosPrompt = document.getElementById("iosPrompt");
 
-    // Asignar video
+    // Asignar fuente de video
     if (url) {
       player.src = url;
     }
 
-    // Mostrar título
+    // Título
     movieTitle.innerText = decodeURIComponent(title);
 
     // Botón volver
@@ -103,7 +106,7 @@
       }
     });
 
-    // Mostrar elementos temporales
+    // Mostrar botón y título al tocar pantalla
     let hideTimeout;
     function showUI() {
       [backButton, movieTitle].forEach(el => {
@@ -111,7 +114,7 @@
         el.style.opacity = "1";
       });
 
-      if (hideTimeout) clearTimeout(hideTimeout);
+      clearTimeout(hideTimeout);
       hideTimeout = setTimeout(() => {
         [backButton, movieTitle].forEach(el => {
           el.style.opacity = "0";
@@ -120,35 +123,36 @@
       }, 3000);
     }
 
-    // Mostrar UI al tocar
-    ["click", "touchstart", "mousemove"].forEach(evt =>
+    ["click", "touchstart"].forEach(evt =>
       document.addEventListener(evt, showUI)
     );
 
-    // Ajustar tamaño del video
+    // Redimensionar video
     function resizeVideo() {
       player.style.width = window.innerWidth + "px";
       player.style.height = window.innerHeight + "px";
     }
 
-    // Detectar orientación y ajustar
+    // Manejo de rotación
     function handleOrientation() {
       resizeVideo();
       showUI();
+
+      // Intentar poner en pantalla completa al girar a landscape
       if (window.innerWidth > window.innerHeight && player.requestFullscreen) {
         player.requestFullscreen().catch(() => {});
+      }
+
+      // Rotación automática en navegadores compatibles
+      if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock();
       }
     }
 
     window.addEventListener("resize", resizeVideo);
     window.addEventListener("orientationchange", handleOrientation);
-    window.addEventListener("load", () => {
-      resizeVideo();
-      showUI();
-      detectIOS();
-    });
 
-    // Mostrar instrucción solo en iPhone Safari
+    // iPhone: mostrar aviso temporal
     function detectIOS() {
       const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -157,9 +161,17 @@
         setTimeout(() => {
           iosPrompt.style.opacity = "0";
           setTimeout(() => iosPrompt.style.display = "none", 500);
-        }, 6000);
+        }, 5000);
       }
     }
+
+    // Iniciar
+    window.addEventListener("load", () => {
+      resizeVideo();
+      handleOrientation();
+      detectIOS();
+      showUI();
+    });
   </script>
 
 </body>
