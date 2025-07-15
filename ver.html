@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Ver Película - MIXPELIS</title>
   <style>
     html, body {
@@ -16,69 +16,89 @@
       font-family: sans-serif;
     }
 
-    video {
-      width: 100vw;
-      height: 100vh;
-      object-fit: contain;
-      background: black;
-    }
-
-    #backButton {
-      position: absolute;
+    #back-button {
+      position: fixed;
       top: 20px;
       left: 20px;
-      background: rgba(255, 215, 0, 0.9);
-      color: black;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: gold;
       border: none;
-      padding: 10px 15px;
+      padding: 10px 16px;
       border-radius: 8px;
+      font-size: 16px;
       font-weight: bold;
-      font-size: 1em;
-      display: none;
       cursor: pointer;
-      z-index: 9999;
+      display: none;
+      transition: opacity 0.3s ease;
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: black;
     }
   </style>
 </head>
 <body>
-  <button id="backButton">⬅ Volver</button>
-  <video id="videoPlayer" controls autoplay></video>
+
+  <!-- Botón de volver (inicialmente oculto) -->
+  <button id="back-button">⬅ Volver</button>
+
+  <!-- Reproductor -->
+  <video id="player" controls playsinline webkit-playsinline></video>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const videoUrl = urlParams.get('url');
-    const title = urlParams.get('title');
-    const category = urlParams.get('cat');
+    const params = new URLSearchParams(location.search);
+    const url = params.get("url");
+    const categoria = params.get("cat") || params.get("categoria");
+    const player = document.getElementById("player");
+    const backButton = document.getElementById("back-button");
 
-    const video = document.getElementById('videoPlayer');
-    const backButton = document.getElementById('backButton');
-
-    if (videoUrl) {
-      const source = document.createElement('source');
-      source.src = videoUrl;
-      source.type = 'video/mp4';
-      video.appendChild(source);
-    } else {
-      alert("No se encontró la URL del video.");
+    // Asignar la película
+    if (url) {
+      player.src = url;
     }
 
-    // Mostrar botón de volver al tocar/clic
-    let touchTimeout;
-    document.body.addEventListener('click', () => {
-      backButton.style.display = 'block';
-      clearTimeout(touchTimeout);
-      touchTimeout = setTimeout(() => {
-        backButton.style.display = 'none';
-      }, 3000);
-    });
-
-    // Botón para regresar
-    backButton.addEventListener('click', () => {
-      if (category) {
-        window.location.href = `${category}.html`;
+    // Botón volver
+    backButton.addEventListener("click", () => {
+      if (categoria) {
+        window.location.href = `${categoria}.html`;
       } else {
         window.location.href = "index.html";
       }
+    });
+
+    // Mostrar botón al tocar pantalla
+    let hideTimeout;
+    function showBackButton() {
+      backButton.style.display = "block";
+      backButton.style.opacity = "1";
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(() => {
+        backButton.style.opacity = "0";
+        setTimeout(() => backButton.style.display = "none", 300);
+      }, 3000);
+    }
+
+    // Detectar interacción
+    document.addEventListener("touchstart", showBackButton);
+    document.addEventListener("click", showBackButton); // también para desktop
+    document.addEventListener("mousemove", showBackButton); // opcional en pruebas
+
+    // Ajustar tamaño al girar
+    function resizeVideo() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      player.style.width = vw + "px";
+      player.style.height = vh + "px";
+    }
+
+    window.addEventListener("resize", resizeVideo);
+    window.addEventListener("orientationchange", resizeVideo);
+    window.addEventListener("load", () => {
+      resizeVideo();
     });
   </script>
 </body>
