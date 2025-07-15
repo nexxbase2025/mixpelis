@@ -15,24 +15,6 @@
       font-family: sans-serif;
     }
 
-    #back-button {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1100;
-      background-color: rgba(0, 0, 0, 0.7);
-      color: gold;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      display: none;
-      transition: opacity 0.3s ease;
-      user-select: none;
-    }
-
     #player {
       width: 100vw;
       height: 100vh;
@@ -40,29 +22,79 @@
       background: black;
       display: block;
     }
+
+    #back-button, #movie-title {
+      position: fixed;
+      z-index: 1100;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: gold;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: opacity 0.3s ease;
+      user-select: none;
+      display: none;
+    }
+
+    #back-button {
+      top: 10px;
+      left: 10px;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #movie-title {
+      top: 10px;
+      right: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+
+    #iosPrompt {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: rgba(255,255,255,0.95);
+      color: black;
+      padding: 10px;
+      text-align: center;
+      font-size: 15px;
+      z-index: 999;
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Botón de volver -->
-  <button id="back-button" aria-label="Volver">⬅ Volver</button>
+  <div id="iosPrompt">
+    Para instalar en iPhone, toca <strong>Compartir</strong> y luego <strong>Añadir a pantalla de inicio</strong>.
+  </div>
 
-  <!-- Video player -->
+  <button id="back-button">⬅ Volver</button>
+  <div id="movie-title"></div>
   <video id="player" controls playsinline webkit-playsinline></video>
 
   <script>
     const params = new URLSearchParams(location.search);
     const url = params.get("url");
+    const title = params.get("title") || "PELÍCULA";
     const categoria = params.get("cat") || params.get("categoria");
+
     const player = document.getElementById("player");
     const backButton = document.getElementById("back-button");
+    const movieTitle = document.getElementById("movie-title");
+    const iosPrompt = document.getElementById("iosPrompt");
 
-    // Asignar fuente video
+    // Asignar video
     if (url) {
       player.src = url;
     }
 
-    // Botón volver: vuelve a la categoría o al índice
+    // Mostrar título
+    movieTitle.innerText = decodeURIComponent(title);
+
+    // Botón volver
     backButton.addEventListener("click", () => {
       if (categoria) {
         window.location.href = `${categoria}.html`;
@@ -71,39 +103,63 @@
       }
     });
 
-    // Mostrar el botón y ocultar después de 3s
+    // Mostrar elementos temporales
     let hideTimeout;
-    function showBackButton() {
-      backButton.style.display = "block";
-      backButton.style.opacity = "1";
+    function showUI() {
+      [backButton, movieTitle].forEach(el => {
+        el.style.display = "block";
+        el.style.opacity = "1";
+      });
+
       if (hideTimeout) clearTimeout(hideTimeout);
       hideTimeout = setTimeout(() => {
-        backButton.style.opacity = "0";
-        setTimeout(() => backButton.style.display = "none", 300);
+        [backButton, movieTitle].forEach(el => {
+          el.style.opacity = "0";
+          setTimeout(() => el.style.display = "none", 300);
+        });
       }, 3000);
     }
 
-    // Mostrar el botón al tocar o mover mouse/touch
-    document.addEventListener("touchstart", showBackButton);
-    document.addEventListener("click", showBackButton);
-    document.addEventListener("mousemove", showBackButton);
+    // Mostrar UI al tocar
+    ["click", "touchstart", "mousemove"].forEach(evt =>
+      document.addEventListener(evt, showUI)
+    );
 
-    // Ajustar tamaño video para ocupar toda la pantalla
+    // Ajustar tamaño del video
     function resizeVideo() {
       player.style.width = window.innerWidth + "px";
       player.style.height = window.innerHeight + "px";
     }
 
-    // Ejecutar resize en carga y cambio orientación/ventana
-    window.addEventListener("resize", resizeVideo);
-    window.addEventListener("orientationchange", () => {
+    // Detectar orientación y ajustar
+    function handleOrientation() {
       resizeVideo();
-      showBackButton();  // También mostrar botón al girar pantalla
-    });
+      showUI();
+      if (window.innerWidth > window.innerHeight && player.requestFullscreen) {
+        player.requestFullscreen().catch(() => {});
+      }
+    }
+
+    window.addEventListener("resize", resizeVideo);
+    window.addEventListener("orientationchange", handleOrientation);
     window.addEventListener("load", () => {
       resizeVideo();
-      showBackButton();  // Mostrar botón inicialmente para que se note
+      showUI();
+      detectIOS();
     });
+
+    // Mostrar instrucción solo en iPhone Safari
+    function detectIOS() {
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      if (isIOS && isSafari) {
+        iosPrompt.style.display = "block";
+        setTimeout(() => {
+          iosPrompt.style.opacity = "0";
+          setTimeout(() => iosPrompt.style.display = "none", 500);
+        }, 6000);
+      }
+    }
   </script>
 
 </body>
